@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="meme"></div>
+    <form id="settings">
+    </form>
+    <script>
+        const generateMemeText = (meme, container) => {
+            let memeText = document.createElement("div");
+            memeText.classList.add("meme-text");
+            memeText.innerHTML = `<img id="meme-image" src=${meme["imageSrc"]}>`
+            let topText = document.createElement("h1");
+            topText.innerHTML = meme["topText"];
+            topText.contentEditable = false;
+            topText.classList.add("top");
+            memeText.appendChild(topText);
+            let bottomText = document.createElement("h1");
+
+            bottomText.innerHTML = meme["bottomText"];
+            bottomText.contentEditable = false;
+            bottomText.classList.add("bottom");
+            memeText.appendChild(bottomText);
+            container.appendChild(memeText);
+            let settings = document.getElementById("settings");
+            settings.innerHTML = `<span><input type="text" id="topText" value="${meme["topText"]}"><input type="range" id="topTextSize" value="${meme["topTextSize"]}" step="1"></span><br><span><input type="text" id="bottomText" value="${meme["bottomText"]}"><input type="range" id="bottomTextSize" value="${meme["bottomTextSize"]}" step="1"></span><br><input type="text" id="imageSrc" value="${meme["imageSrc"]}" style="width: 298px; padding: 2px; outline: none;">`;
+            document.getElementById("meme").querySelector(".top").style.fontSize = `${meme["topTextSize"]}px`;
+            document.getElementById("meme").querySelector(".bottom").style.fontSize = `${meme["bottomTextSize"]}px`;
+            document.getElementById("settings").querySelectorAll("input").forEach((input) => {
+                if (input.type == "text") {
+                    if (input.id == "imageSrc") {
+                        input.addEventListener("input", (e) => {
+                            if (!e.target.value == "") {
+                                meme["imageSrc"] = e.target.value
+                                document.getElementById("meme").querySelector("img").src = meme["imageSrc"];
+                            }
+                        });
+                    } else {
+                        input.addEventListener("input", (e) => {
+                            meme[e.target.id] = e.target.value
+                            document.getElementById("meme").querySelector(".top").innerHTML = meme["topText"];
+                            document.getElementById("meme").querySelector(".bottom").innerHTML = meme["bottomText"];
+                        });
+                    }
+                }
+                if (input.type == "range") {
+                    input.addEventListener("input", (e) => {
+                        meme[e.target.id] = e.target.value
+                        document.getElementById("meme").querySelector(".top").style.fontSize = `${meme["topTextSize"]}px`;
+                        document.getElementById("meme").querySelector(".bottom").style.fontSize = `${meme["bottomTextSize"]}px`;
+                    })
+                }
+            })
+        }
+        //Meme data
+        let meme = {
+            "topText": "hello",
+            "topTextSize": 50,
+            "bottomTextSize": 50,
+            "bottomText": "hi",
+            "imageSrc": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmupYgqkzKS0e_m6fyYmC1hkpqiIiACzY1WAcNYCQb5Q&s",
+        }
+        //Generate Meme
+        generateMemeText(meme, document.getElementById("meme"));
+    </script>
+</body>
+
+</html>
